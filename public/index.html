@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Raspberrry Pi System Info</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const socket = io()
+
+      socket.on('systemData', (data) => {
+      document.getElementById('localIP').textContent = data.localIP
+      document.getElementById('publicIP').textContent = data.publicIP
+      document.getElementById('cpuUsage').textContent = data.cpuUsage + '%'
+      document.getElementById('memoryUsage').textContent = data.memoryUsage + '%'
+      document.getElementById('cpuTemperature').textContent = data.cpuTemperature
+      document.getElementById('freeSpace').textContent = data.freeSpace
+
+      const pm2List = document.getElementById('pm2List')
+      pm2List.innerHTML = ''  
+      data.pm2Processes.forEach(proc => {
+        const card = document.createElement('div')
+        card.classList.add('bg-gray-800', 'text-white', 'p-4', 'rounded-lg', 'shadow-md', 'mb-4')
+
+        const cardTitle = document.createElement('h3')
+        cardTitle.classList.add('font-semibold', 'text-xl')
+        cardTitle.textContent = `${proc.name}`
+
+        const status = document.createElement('p')
+        status.classList.add('text-gray-400')
+        status.textContent = `Estado: ${proc.status}`
+
+        const cpu = document.createElement('p')
+        cpu.classList.add('text-gray-300')
+        cpu.textContent = `Uso de CPU: ${proc.cpu}%`
+
+        const memory = document.createElement('p')
+        memory.classList.add('text-gray-300')
+        memory.textContent = `Memoria: ${proc.memory}`
+
+        card.appendChild(cardTitle)
+        card.appendChild(status)
+        card.appendChild(cpu)
+        card.appendChild(memory)
+
+        pm2List.appendChild(card)
+      })
+    })
+  </script>
+</head>
+<body class="bg-gray-900 font-sans">
+
+  <div class="max-w-7xl mx-auto p-6">
+    <h1 class="text-2xl font-bold mb-6 text-white">Raspberrry Pi 3</h1>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div class="bg-gray-800 text-white p-4 rounded-lg shadow-md">
+        <h2 class="font-semibold text-xl">IP Local</h2>
+        <p id="localIP" class="text-gray-300">Loading...</p>
+      </div>
+
+      <div class="bg-gray-800 text-white p-4 rounded-lg shadow-md">
+        <h2 class="font-semibold text-xl">IP Pública</h2>
+        <p id="publicIP" class="text-gray-300">Loading...</p>
+      </div>
+
+      <div class="bg-gray-800 text-white p-4 rounded-lg shadow-md">
+        <h2 class="font-semibold text-xl">Uso de CPU</h2>
+        <p id="cpuUsage" class="text-gray-300">Loading...</p>
+      </div>
+
+      <div class="bg-gray-800 text-white p-4 rounded-lg shadow-md">
+        <h2 class="font-semibold text-xl">Uso de Memoria</h2>
+        <p id="memoryUsage" class="text-gray-300">Loading...</p>
+      </div>
+
+      <div class="bg-gray-800 text-white p-4 rounded-lg shadow-md">
+        <h2 class="font-semibold text-xl">Temperatura del CPU</h2>
+        <p id="cpuTemperature" class="text-gray-300">Loading...</p>
+      </div>
+
+      <div class="bg-gray-800 text-white p-4 rounded-lg shadow-md">
+        <h2 class="font-semibold text-xl">Espacio Libre en Almacenamiento</h2>
+        <p id="freeSpace" class="text-gray-300">Loading...</p>
+      </div>
+    </div>
+
+    <div id="pm2List" class="mt-6"></div>
+
+  </div>
+</body>
+</html>
