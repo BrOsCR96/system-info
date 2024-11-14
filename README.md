@@ -1,5 +1,7 @@
 
-# Raspberry Pi System Information Web Interface
+ Raspberry Pi System Information Web Interface
+ ![image](https://github.com/user-attachments/assets/7722044a-04d8-4d72-8b0b-956c4b8d9931)
+
 
 This guide will help you set up a system information web interface on your Raspberry Pi.
 
